@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Schema } from "mongoose";
 
 export interface IUser extends Document {
     firstName: string;
@@ -7,20 +7,21 @@ export interface IUser extends Document {
     email: string;
     password: string;
     birthdate: Date;
-    mobileNumber: number;
+    mobileNumber: string; 
     avatar: string;
     bio?: string;
     links?: string[];
+    gender?: "male" | "female" | "other"; 
     isVerified: boolean;
     isActive: boolean;
     isDeleted: boolean;
+    isDisabled?: boolean; 
     timezone: string;
     privacy: "public" | "private";
     role: "personal" | "business" | "creator";
     lastSeen: Date;
-    followers: string[];
-    following: string[];
-
+    followers: Schema.Types.ObjectId[]; 
+    following: Schema.Types.ObjectId[];
     createdAt: Date;
     updatedAt: Date;
 }
