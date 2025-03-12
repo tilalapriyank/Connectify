@@ -11,17 +11,22 @@ const UserSchema = new Schema<IUser>(
         birthdate: { type: Date, required: true },
         mobileNumber: { type: Number, required: true, unique: true },
         avatar: { type: String, default: "" },
-        bio: { type: String, default: "" },
-        link: { type: String, default: "" },
+        bio: { type: String, default: "" }, 
+        links: [{ type: String, default: [] }], 
         isVerified: { type: Boolean, default: false },
         isActive: { type: Boolean, default: true },
         isDeleted: { type: Boolean, default: false },
         timezone: { type: String, required: true },
-        followersCount: { type: Number, default: 0 }, 
-        followingCount: { type: Number, default: 0 },
+        privacy: { type: String, enum: ["public", "private"], default: "public" },
+        role: { type: String, enum: ["personal", "business", "creator"], default: "personal" }, 
+        lastSeen: { type: Date, default: Date.now }, 
+        followers: [{ type: Schema.Types.ObjectId, ref: "User" }], 
+        following: [{ type: Schema.Types.ObjectId, ref: "User" }], 
     },
     { timestamps: true }
 );
+
+UserSchema.index({ userName: 1, email: 1 });
 
 const UserModel = model<IUser>("User", UserSchema);
 

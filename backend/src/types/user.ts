@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 
 export interface IUser extends Document {
     firstName: string;
@@ -10,13 +10,17 @@ export interface IUser extends Document {
     mobileNumber: number;
     avatar: string;
     bio?: string;
-    link?: string;
+    links?: string[];
     isVerified: boolean;
     isActive: boolean;
     isDeleted: boolean;
     timezone: string;
-    followersCount: number; 
-    followingCount: number;
+    privacy: "public" | "private";
+    role: "personal" | "business" | "creator";
+    lastSeen: Date;
+    followers: string[];
+    following: string[];
+
     createdAt: Date;
     updatedAt: Date;
 }
