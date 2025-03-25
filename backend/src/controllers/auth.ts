@@ -30,8 +30,21 @@ export const register = catchAsync(async (req: Request, res: Response) => {
 
     res.status(201).json({
         message: "User registered successfully",
-        userId: newUser._id
+        type: "success"
     });
+});
+
+export const checkUsername = catchAsync(async (req: Request, res: Response) => {
+
+    const { userName } = req.body;
+
+    const user = await UserModel.findOne({ userName });
+
+    if (user) {
+        return res.status(200).json({ available: false });
+    }
+
+    res.status(200).json({ available: true });
 });
 
 export const login = catchAsync(async (req: Request, res: Response) => {
@@ -51,6 +64,7 @@ export const login = catchAsync(async (req: Request, res: Response) => {
 
     res.status(200).json({
         message: "Login successful",
+        type: "success",
         token,
         user: {
             userName: user.userName,
