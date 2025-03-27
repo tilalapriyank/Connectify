@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import ENDPOINT from "../../api/config";
 import { AppDispatch } from "../../store/store";
 import { registerRequest } from "../../store/actions/authActions";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -15,6 +17,7 @@ const Register: React.FC = () => {
     const [usernameAvailable, setUsernameAvailable] = useState<null | boolean>(null);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
     const isMobile = useMediaQuery({ maxWidth: 767 });
     const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });
@@ -57,7 +60,7 @@ const Register: React.FC = () => {
             style={{
                 width: isMobile ? "100%" : isTablet ? "60%" : "480px",
                 padding: "30px",
-                margin: "150px auto",
+                margin: "100px auto",
                 borderRadius: "12px",
                 boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
                 background: "#fff",
@@ -120,6 +123,13 @@ const Register: React.FC = () => {
                     </Button>
                 </Form.Item>
             </Form>
+
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+          <Text type="secondary">You have already account? </Text>
+          <Link to="/login" style={{ fontWeight: "bold", color: "#1890ff" }}>
+            Login here
+          </Link>
+        </div>
         </Card>
     );
 };

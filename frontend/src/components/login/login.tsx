@@ -1,18 +1,25 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, Typography, Card, message } from "antd";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { loginRequest } from "../../store/actions/authActions";
+import { useNavigate } from "react-router-dom";
+
+const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+   const navigate = useNavigate();
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", values);
+      await dispatch(loginRequest(values));
       message.success("Login successful!");
-      console.log("Response:", response.data);
-      // Handle successful login (e.g., save token, redirect user)
+      setTimeout(() => navigate("/home"), 1000);
     } catch (error: any) {
       message.error(error.response?.data?.message || "Login failed");
     } finally {
@@ -23,48 +30,70 @@ const Login: React.FC = () => {
   return (
     <div
       style={{
-        maxWidth: 400,
-        margin: "auto",
-        padding: 20,
         display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "90vh",
+        padding: "20px",
       }}
     >
-      <h2 style={{ textAlign: "center" }}>Login</h2>
-      <Form
-        layout="vertical"
-        onFinish={onFinish}
-        style={{ width: "100%" }}
+      <Card
+        style={{
+          width: 380,
+          padding: "30px",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          borderRadius: "10px",
+        }}
       >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, type: "email", message: "Please enter a valid email" }]}
-        >
-          <Input placeholder="Enter your email" />
-        </Form.Item>
+        <Title level={2} style={{ textAlign: "center", marginBottom: "20px" }}>
+          Login
+        </Title>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: "Please enter your password" }]}
+        <Form
+          layout="vertical"
+          onFinish={onFinish}
+          style={{ width: "100%" }}
         >
-          <Input.Password placeholder="Enter your password" />
-        </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, type: "email", message: "Please enter a valid email" }]}
+          >
+            <Input prefix={<MailOutlined />} placeholder="Enter your email" />
+          </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading} block>
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
-      <div style={{ textAlign: "center", marginTop: 10 }}>
-        <span>Don't have an account? </span>
-        <Link to="/register">Register here</Link>
-      </div>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please enter your password" }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              block
+              style={{
+                height: "40px",
+                fontSize: "16px",
+                fontWeight: "bold",
+              }}
+            >
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
+          <Text type="secondary">Don't have an account? </Text>
+          <Link to="/register" style={{ fontWeight: "bold", color: "#1890ff" }}>
+            Register here
+          </Link>
+        </div>
+      </Card>
     </div>
   );
 };

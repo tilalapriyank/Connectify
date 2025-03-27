@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { registerUserAPI } from "../../api/authApi";
-import { REGISTER_REQUEST, RegisterRequestAction } from "../../types/authTypes";
-import { registerSuccess, registerFailure } from "../actions/authActions";
+import { loginUserAPI, registerUserAPI } from "../../api/authApi";
+import { LOGIN_REQUEST, LoginRequestAction, REGISTER_REQUEST, RegisterRequestAction } from "../../types/authTypes";
+import { registerSuccess, registerFailure, loginSuccess, loginFailure } from "../actions/authActions";
 import { message } from "antd";
 
 function* registerUserSaga(action: RegisterRequestAction): Generator<any, void, any> {
@@ -18,7 +18,23 @@ function* registerUserSaga(action: RegisterRequestAction): Generator<any, void, 
     }
 }
 
+function* loginUserSaga(action: LoginRequestAction): Generator<any, void, any> {
+    try {
+        const response = yield call(loginUserAPI, action.payload);
+        yield put(loginSuccess(response.user));
+        if (response.type == "success") {
+            message.success("Login successful!");
+            localStorage.setItem("authToken", response.token);   
+        } else {
+            message.error("Login failed!");
+        }
+    } catch (error: any) {
+        yield put(loginFailure(error.message || "Login failed."))
+    }
+}
+
 // Watcher Saga
 export default function* authSaga() {
     yield takeLatest(REGISTER_REQUEST, registerUserSaga);
+    yield takeLatest(LOGIN_REQUEST, loginUserSaga);
 }

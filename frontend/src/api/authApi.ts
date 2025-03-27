@@ -1,4 +1,4 @@
-import { RegisterData } from "../types/authTypes";
+import { LoginData, RegisterData } from "../types/authTypes";
 import ENDPOINTS from "./config";
 
 export const registerUserAPI = async (userData: RegisterData) => {
@@ -8,9 +8,15 @@ export const registerUserAPI = async (userData: RegisterData) => {
         body: JSON.stringify(userData),
     });
 
-    if (!response.ok) {
-        throw new Error("Failed to register user");
-    }
-
     return response.json();
 };
+
+export const loginUserAPI = async (userData: LoginData) => {
+    const response = await fetch(`${ENDPOINTS.LOGIN}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+    });
+
+    return response.json();
+}
