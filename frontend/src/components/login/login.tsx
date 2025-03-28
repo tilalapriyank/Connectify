@@ -2,22 +2,20 @@ import React, { useState } from "react";
 import { Form, Input, Button, Typography, Card, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
-import { loginRequest } from "../../store/actions/authActions";
+import { useAuth } from "../../context/AuthContext"
 import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
    const navigate = useNavigate();
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      await dispatch(loginRequest(values));
+      login(values);
       message.success("Login successful!");
       setTimeout(() => navigate("/home"), 1000);
     } catch (error: any) {
